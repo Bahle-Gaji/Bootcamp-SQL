@@ -208,7 +208,7 @@ WHERE u.id = 2;
 
 
 --All orders for a day--
-SELECT u.name, prod.name, prod.price, odet.qty, ohead.order_date
+SELECT u.name, prod.name, prod.price, odet.qty, prod.price * odet.qty AS sub_total, ohead.order_date
 FROM order_header AS ohead
 INNER JOIN users AS u
 ON ohead.user_id = u.id
@@ -217,3 +217,15 @@ ON ohead.order_id = odet.order_header
 INNER JOIN products AS prod
 ON odet.prod_id = prod.id
 WHERE date_part('day', ohead.order_date) = date_part('day', current_timestamp);
+
+
+--Total order for user1
+SELECT SUM(prod.price * odet.qty)
+FROM order_header AS ohead
+INNER JOIN users AS u
+ON ohead.user_id = u.id
+INNER JOIN order_details AS odet
+ON ohead.order_id = odet.order_header
+INNER JOIN products AS prod
+ON odet.prod_id = prod.id
+WHERE u.id = 1;
